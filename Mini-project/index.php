@@ -34,14 +34,7 @@ session_start();
           </ul>
       </div>
   </nav>
-  <div class="container-fluid" id="s1">
-      <img src="img/pp.jpg" alt="flower" id="image" >
-      <div class="text">
-        <h4>Send the flowers like you mean it</h4>
-        <button type="submit"  id="btn"><a href="product.php">Shop Now!</a></button>
-      </div>
-    </div>
-    <br><br>
+ 
 <!-- form -->
 <h1> Add Product</h1>
 <div  class="container" >
@@ -81,14 +74,21 @@ session_start();
   <tbody>
   <?php
 if(isset($_POST['add'])){
-    $_SESSION['pname']=$_POST['name'].'<br>';
-    $_SESSION['pprice']=$_POST['price'].'<br>';
-    $_SESSION['pdescription']=$_POST['description'].'<br>';
-    $_SESSION['pphoto']=$_POST['photo'].'<br>';
-    echo " <tr> <td>".$_SESSION ['pname'] 
-    ."</td> <td> ".$_SESSION ['pprice']."</td> <td>". 
-    $_SESSION['pdescription'] . "</td><td>".
-     $_SESSION ['pphoto'] ."</td> </tr> ";
+  if (!(file_exists("img/" . $_FILES["photo"]["name"]))) {
+    move_uploaded_file($_FILES["photo"]["tmp_name"], "img/" . $_FILES["photo"]["name"]);
+}
+    $_SESSION['pname'].=$_POST['name'].'<br>';
+    $_SESSION['pprice'].=$_POST['price'].'<br>';
+    $_SESSION['pdescription'].=$_POST['description'].'<br>';
+    $_SESSION['pphoto'].=$_FILES["photo"]["name"] . '<br>';
+    $productName = explode("<br>",$_SESSION ['pname']) ;
+ $productPrice = explode("<br>",$_SESSION ['pprice']) ;
+ $productDesc = explode("<br>",$_SESSION ['pdescription']) ;
+ $productPhoto = explode("<br>",$_SESSION ['pphoto']) ;
+ for($i=0; $i<count($productName)-1; $i++)
+ {
+echo ('<tr><td>' . $productName[$i] . '</td><td>' . $productPrice[$i] . '</td><td>' . $productDesc[$i] . '</td><td><img src="img/' . $productPhoto[$i] .' alt="Image" class="tImg" ></td></tr><br>');
+}
 }
 ?>
 </tbody>
